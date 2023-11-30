@@ -1,0 +1,22 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block content %}
+<i><div class ="container">
+    
+    <section id="contact" class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center">Contact Us</h2>
+            <p class="text-center">Have questions or need a custom quote? Get in touch with us today.</p>
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <form method="post" >
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class= "btn btn-primary btn-block">Submit</button>
+                    </form>
+                
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

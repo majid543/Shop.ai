@@ -1,0 +1,116 @@
+<!-- base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ecommerce website {% endblock %}</title>
+
+    <!-- Bootstrap CSS via CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <!-- Logo -->
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'ecommerce/1.png' %}" class="d-inline-block align-top" height="100" style="zoom: 2;" alt="Logo">
+        </a>
+
+        <!-- Navbar Toggler for mobile devices -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar Links -->
+        <i><strong><div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home">HOME</a>
+                </li>
+                {% comment %} <li class="nav-item">
+                    <a class="nav-link" href="/recommendation">RECOMMENDATIONS</a>
+                </li> {% endcomment %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/cart">CART</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact">Contact Us</a>
+                </li>
+            </ul>
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                   ACCOUNT 
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                    <li><a class = "dropdown-item" href="{% url 'login' %}">Login</a>
+                    <li><a class = "dropdown-item" href="{% url 'register' %}">register</a>
+                    <li><a class = "dropdown-item" href="{% url 'logout' %}">Logout</a>
+                </ul>
+            </div>
+        </i></strong>
+            <!-- Search Bar -->
+           
+            <!-- User Account Dropdown -->
+            
+        </div>
+  
+</nav>
+
+
+
+{% block content %}
+<!-- Default content for child templates -->
+{% endblock %}
+    {% comment %}  
+        <!-- Categories Filter -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <label for="categoryFilter" class="form-label">Categories</label>
+                <select class="form-select" id="categoryFilter">
+                    <option selected>All Categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Brand Filter JavaScript (unchanged) -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI/t1Zl/3l9z8lFf5xl9xkA6aZkPb8CZLlD9DeA=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            // Initial display
+            filterProducts('All Brands');
+    
+            // Brand filter
+            $('#brandFilter').change(function() {
+                var selectedBrand = $(this).val();
+                filterProducts(selectedBrand);
+            });
+    
+            function filterProducts(brand) {
+                $('.product-card').hide();  // Hide all products
+    
+                if (brand === 'All Brands') {
+                    $('.product-card').show();  // Show all products if 'All Brands' selected
+                } else {
+                    $('.product-card[data-brand="' + brand + '"]').show();  // Show products for the selected brand
+                }
+            }
+        });
+    </script>{% endcomment %}
+    
+<!-- Bootstrap JS and Popper.js via CDN (required for Bootstrap features) -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Add your custom JavaScript links or scripts here -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</body>
+</html>

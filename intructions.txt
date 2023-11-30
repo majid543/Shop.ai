@@ -1,0 +1,20 @@
+after downloading the File go to this cd web then use 
+
+" pip install -r requirements.txt"
+
+
+it has two dependency and you must have the python install in your environment 
+
+
+for running the server use 
+
+"python manage.py runserver"
+
+in the command prompt it will give the address  (http://127.0.0.1:8000/) press control and then click it and the website opens 
+
+
+for viewing the admin portal 
+
+paste this  address
+
+http://127.0.0.1:8000/admin

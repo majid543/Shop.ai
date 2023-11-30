@@ -1,0 +1,126 @@
+{% extends 'ecommerce/base.html' %}
+{% load custom_tags %}
+{% block content %}
+<br><br>
+<div class = "container"> 
+<h2>Your Cart</h2>
+
+<h1>TOTAL PRICE: ${{ cart_items|calc_sum:'price' }}</h1>
+<a href="/checkout" class="btn btn-success mt-5">Proceed to Checkout</a>
+<br><br><br>
+{% if cart_items %}
+
+
+{% else %}
+    <p>Your cart is empty.</p>
+{% endif %}
+<hr><h1>YOUR CART</h1>
+<div class="row">
+    {% for product in cart_items %}
+        <div class="col-md-4">
+            <div class="card mt-4 mb-4" style="width: 200px;">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; width: 100%;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">Price: ${{ product.price }}</p>
+                    <p class="card-text">Stock: <span id="availability{{ product.id }}">{{ product.availability }}</span></p>
+                    <a href="/delete_from_cart/{{product.id}}" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<hr><br>
+<h1>Recommendations On your Interest</h1>
+    <br><br>
+
+
+    <div class="row" id="recommendedProductList">
+        {% for product in recommended_products %}
+            <div class="col-md-4 mb-4 recommended-product-card" data-brand="{{ product.brand.name }}" data-category="{{ product.category.name }}">
+                <div class="card">
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" height="300px">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.brand.name }}</h5>
+                        <h2 class="card-title">{{ product.name }}</h2>
+                        <div class="card-body-content">
+                            <p class="card-text">{{ product.description }}</p>
+                        </div>
+                        <p class="card-text">Price: ${{ product.price }}</p>
+                        <p class="card-text">STOCK: <span id="availability{{ product.id }}">{{ product.availability }}</span></p>
+                        <a href="#" class="btn btn-primary" onclick="handleAddToCartClick({{ product.id }})">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+
+
+
+
+
+<script>
+    {% comment %} function addToCart(productId) {
+        // Make an AJAX request to add the product to the cart
+        $.ajax({
+            type: 'POST',
+            url: '/add_to_cart/' + productId + '/',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            },
+            success: function (response) {
+                console.log(response.message);
+                // You can update the UI or show a success message to the user
+            },
+            error: function (error) {
+                console.error(error);
+                // You can show an error message to the user
+            }
+        });
+    }
+
+    // Function to handle the click event
+    function handleAddToCartClick(productId) {
+        // Perform any additional logic before adding to the cart if needed
+        console.log("Product clicked:", productId);
+
+        // Call the addToCart function
+        addToCart(productId);
+    } {% endcomment %}
+    
+    function deleteFromCart(productId) {
+        $.ajax({
+            type: 'POST',
+            url: '/delete_from_cart/' + productId + '/',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            },
+            success: function (response) {
+                console.log(response.message);
+                // Update the UI or show a success message to the user
+                // You may also want to reload the page or update the cart section dynamically
+            },
+            error: function (error) {
+                console.error(error);
+                // You can show an error message to the user
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock%}

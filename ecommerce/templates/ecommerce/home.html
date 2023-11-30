@@ -1,0 +1,186 @@
+{% extends 'ecommerce/base.html' %}
+
+
+{% block content%}
+
+<div class="container mt-4">
+    <!-- Filter Options -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <!-- Brand Filter Options -->
+            <h5>Filter by Brand:</h5>
+            <ul class="brand-filter">
+                {% for brand in brands %}
+                    <li><a href="#" onclick="filterProducts('brand', '{{ brand.name }}')">{{ brand.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <!-- Category Filter Options -->
+            <h5>Filter by Category:</h5>
+            <ul class="category-filter">
+                {% for category in categories %}
+                    <li><a href="#" onclick="filterProducts('category', '{{ category.name }}')">{{ category.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col-md-3">
+            <!-- Price Filter Options -->
+            <div class="filter-section">
+                <h5>Filter by Price:</h5>
+                <form onsubmit="filterProductsByPrice(); return false;">
+                    <div class="form-row">
+                        <div class="col">
+                            <input type="number" class="form-control" id="minPrice" placeholder="Min" min="0">
+                        </div>
+                        <div class="col">
+                            <input type="number" class="form-control" id="maxPrice" placeholder="Max" min="0">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Apply</button>
+                </form>
+            </div>
+        </div>
+    </div> 
+
+
+
+    <div class="row" id="productList">
+        {% for product in products %}
+            <div class="col-md-4 mb-4 product-card" data-brand="{{ product.brand.name }}" data-category="{{ product.category.name }}">
+                <div class="card">
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" height="300px">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.brand.name }}</h5>
+                        <h2 class="card-title">{{ product.name }}</h2>
+                        <div class="card-body-content">
+                            <p class="card-text">{{ product.description }}</p>
+                        </div>
+                        <p class="card-text">Price: ${{ product.price }}</p>
+                        <p class="card-text">STOCK: <span id="availability{{ product.id }}">{{ product.availability }}</span></p>
+                        <a href="#" class="btn btn-primary"  onclick="handleAddToCartClick({{ product.id }})">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+
+<style>
+    /* Styling for Filter Section */
+.filter-section {
+    background-color: #f8f9fa; /* Light gray background */
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+/* Custom Styling for Filter Options */
+.brand-filter li,
+.category-filter li {
+    margin-bottom: 8px;
+}
+
+/* Styling for Product Card */
+.product-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Styling for Card */
+.card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Styling for Card Body */
+.card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Styling for Card Body Content */
+.card-body-content {
+    max-height: 150px;
+    overflow: hidden;
+}
+</style>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    // Function to add product to the cart
+    function addToCart(productId) {
+        // Make an AJAX request to add the product to the cart
+        $.ajax({
+            type: 'POST',
+            url: '/add_to_cart/' + productId + '/',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            },
+            success: function (response) {
+                console.log(response.message);
+                // You can update the UI or show a success message to the user
+            },
+            error: function (error) {
+                console.error(error);
+                // You can show an error message to the user
+            }
+        });
+    }
+
+    // Function to handle the click event
+    function handleAddToCartClick(productId) {
+        // Perform any additional logic before adding to the cart if needed
+        console.log("Product clicked:", productId);
+
+        // Call the addToCart function
+        addToCart(productId);
+    }
+
+
+    function filterProducts(filterType, filterValue) {
+        // Hide all product cards
+        $('.product-card').hide();
+
+        // Show the product cards that match the selected brand or category
+        if (filterType === 'brand') {
+            $('.product-card[data-brand="' + filterValue + '"]').show();
+        } else if (filterType === 'category') {
+            $('.product-card[data-category="' + filterValue + '"]').show();
+        }
+    }
+
+
+    // JavaScript function to filter products based on the specified price range
+    function filterProductsByPrice() {
+        var minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
+        var maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
+
+        // Hide all product cards
+        $('.product-card').hide();
+
+        // Show the product cards that match the specified price range
+        $('.product-card').each(function () {
+            var productPrice = parseFloat($(this).find('.card-text:contains("Price")').text().replace('Price: $', ''));
+            if (productPrice >= minPrice && productPrice <= maxPrice) {
+                $(this).show();
+            }
+        });
+    }
+
+   
+</script>
+
+
+
+
+{% endblock %}

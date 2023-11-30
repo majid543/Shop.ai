@@ -1,0 +1,33 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block content %}
+
+<br><br>
+<h3 class = "container">Kindly do provide us with the Bank details to proceed to the order Placement.</h3>
+<!-- checkout.html --><br><br>
+<form method="post" action="/checkout/" class="container">  <!-- Change this to /checkout/ -->
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success mt-5">Proceed to Place Order</button>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock%}
